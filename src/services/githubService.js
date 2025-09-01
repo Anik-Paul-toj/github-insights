@@ -15,6 +15,21 @@ class GitHubService {
     });
   }
 
+  async getUserRepositories(username, page = 1, per_page = 30) {
+    try {
+      const response = await this.api.get(`/users/${username}/repos`, {
+        params: {
+          sort: 'updated',
+          page,
+          per_page
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(`Failed to fetch repositories: ${error.message}`);
+    }
+  }
+
   async getRepository(owner, repo) {
     try {
       const response = await this.api.get(`/repos/${owner}/${repo}`);

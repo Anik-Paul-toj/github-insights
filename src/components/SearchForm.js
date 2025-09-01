@@ -2,38 +2,28 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import './SearchForm.css';
 
-const SearchForm = ({ onSearch, loading }) => {
+const SearchForm = ({ onSearchUser, loading }) => {
   const [owner, setOwner] = useState('');
-  const [repo, setRepo] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (owner.trim() && repo.trim()) {
-      onSearch(owner.trim(), repo.trim());
+    if (owner.trim()) {
+      onSearchUser(owner.trim());
     }
   };
 
   return (
     <div className="search-form">
       <h1>GitHub Repository Insights</h1>
-      <p>Enter a GitHub repository to get detailed insights and AI-powered analysis</p>
+      <p>Enter a GitHub username to explore their repositories and get detailed insights with AI-powered analysis</p>
       
       <form onSubmit={handleSubmit} className="search-container">
         <div className="input-group">
           <input
             type="text"
-            placeholder="Repository Owner (e.g., facebook)"
+            placeholder="GitHub Username (e.g., facebook, google, microsoft)"
             value={owner}
             onChange={(e) => setOwner(e.target.value)}
-            disabled={loading}
-            required
-          />
-          <span className="separator">/</span>
-          <input
-            type="text"
-            placeholder="Repository Name (e.g., react)"
-            value={repo}
-            onChange={(e) => setRepo(e.target.value)}
             disabled={loading}
             required
           />
@@ -41,7 +31,7 @@ const SearchForm = ({ onSearch, loading }) => {
         
         <button type="submit" disabled={loading} className="search-button">
           <Search size={20} />
-          {loading ? 'Analyzing...' : 'Analyze Repository'}
+          {loading ? 'Loading Repositories...' : 'Find Repositories'}
         </button>
       </form>
     </div>

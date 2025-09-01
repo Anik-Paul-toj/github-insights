@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import LandingPage from './components/LandingPage';
 import SearchForm from './components/SearchForm';
-import StatsCard from './components/StatsCard';
-import LanguageChart from './components/LanguageChart';
-import CommitChart from './components/CommitChart';
-import AIInsights from './components/AIInsights';
+import RepositoryList from './components/RepositoryList';
+import RepositoryModal from './components/RepositoryModal';
+import Dashboard from './components/Dashboard';
 import LoadingSpinner from './components/LoadingSpinner';
 import githubService from './services/githubService';
 import aiService from './services/aiService';
@@ -12,7 +11,12 @@ import './App.css';
 
 function App() {
   const [showDashboard, setShowDashboard] = useState(false);
+  const [showRepositories, setShowRepositories] = useState(false);
+  const [showInsights, setShowInsights] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [repositories, setRepositories] = useState([]);
+  const [selectedRepository, setSelectedRepository] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [repoData, setRepoData] = useState(null);
   const [languages, setLanguages] = useState(null);
   const [commitActivity, setCommitActivity] = useState(null);
@@ -83,11 +87,33 @@ function App() {
     setShowDashboard(true);
   };
 
-  const toggleDemoMode = () => {
-    // Remove this function as we're not using demo mode anymore
+  const handleSearchUser = async (username) => {
+    setLoading(true);
+    setError(null);
+    setRepositories([]);
+    
+    try {
+      const repos = await githubService.getUserRepositories(username);
+      setRepositories(repos);
+      setShowRepositories(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSearch = async (owner, repo) => {
+  const handleRepositorySelect = (repository) => {
+    setSelectedRepository(repository);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedRepository(null);
+  };
+
+  const handleViewInsights = async (owner, repo) => {
     setLoading(true);
     setError(null);
     setAiError(null);
@@ -95,6 +121,8 @@ function App() {
     setLanguages(null);
     setCommitActivity(null);
     setAiInsights(null);
+    setShowRepositories(false);
+    setShowInsights(true);
 
     try {
       // Fetch basic repository data
@@ -139,42 +167,89 @@ function App() {
     }
   };
 
+  const handleBackToRepositories = () => {
+    setShowInsights(false);
+    setShowRepositories(true);
+    setRepoData(null);
+    setLanguages(null);
+    setCommitActivity(null);
+    setAiInsights(null);
+    setError(null);
+    setAiError(null);
+  };
+
+  const handleBackToSearch = () => {
+    setShowRepositories(false);
+    setShowInsights(false);
+    setRepositories([]);
+    setError(null);
+  };
+
   return (
     <div className="App">
       {!showDashboard ? (
         <LandingPage onGetStarted={handleGetStarted} />
       ) : (
         <div className="container">
-          <SearchForm 
-            onSearch={handleSearch} 
-            loading={loading} 
-          />
+          {!showRepositories && !showInsights && (
+            <SearchForm 
+              onSearchUser={handleSearchUser} 
+              loading={loading} 
+            />
+          )}
+
+          {showRepositories && (
+            <>
+              <div className="navigation-header">
+                <button onClick={handleBackToSearch} className="back-button">
+                  ← Back to Search
+                </button>
+              </div>
+              <RepositoryList 
+                repositories={repositories}
+                loading={loading}
+                onRepositorySelect={handleRepositorySelect}
+              />
+            </>
+          )}
+
+          {showInsights && repoData && (
+            <>
+              <div className="navigation-header">
+                <button onClick={handleBackToRepositories} className="back-button">
+                  ← Back to Repositories
+                </button>
+              </div>
+              <Dashboard 
+                repoData={repoData}
+                languages={languages}
+                commitActivity={commitActivity}
+                contributorsData={contributorsData}
+                aiInsights={aiInsights}
+                aiLoading={aiLoading}
+                aiError={aiError}
+                onRetryAI={handleRetryAI}
+              />
+            </>
+          )}
           
           {error && (
             <div className="error-message">
               <p>Error: {error}</p>
+              {showRepositories && (
+                <button onClick={handleBackToSearch} className="retry-button">
+                  Try Another User
+                </button>
+              )}
             </div>
           )}
 
-          {repoData && (
-            <>
-              <StatsCard repoData={repoData} />
-              <div className="charts-container">
-                <div className="chart-item language-chart">
-                  <LanguageChart languages={languages} />
-                </div>
-                <div className="chart-item commit-chart">
-                  <CommitChart commitActivity={commitActivity} />
-                </div>
-              </div>
-              <AIInsights 
-                insights={aiInsights} 
-                loading={aiLoading} 
-                error={aiError}
-                onRetry={handleRetryAI}
-              />
-            </>
-          )}
+          <RepositoryModal 
+            repository={selectedRepository}
+            isOpen={showModal}
+            onClose={handleCloseModal}
+            onViewInsights={handleViewInsights}
+          />
         </div>
       )}
     </div>
