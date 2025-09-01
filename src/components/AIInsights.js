@@ -2,7 +2,7 @@ import React from 'react';
 import { Brain, Code, Users, AlertTriangle, RefreshCw } from 'lucide-react';
 import './AIInsights.css';
 
-const AIInsights = ({ insights, loading, error, onRetry, demoMode }) => {
+const AIInsights = ({ insights, loading, error, onRetry }) => {
   const isRateLimit = error && (
     error.includes('rate limit') || 
     error.includes('quota') || 
@@ -19,7 +19,7 @@ const AIInsights = ({ insights, loading, error, onRetry, demoMode }) => {
             <div>Failed to generate AI insights: {error}</div>
             {isRateLimit && (
               <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', opacity: 0.8 }}>
-                💡 Tip: The free Gemini API has limited requests per minute. 
+                💡 Tip: The Cohere API has limited requests per minute. 
                 Wait a moment and try again, or consider upgrading your API plan.
               </div>
             )}
@@ -103,10 +103,7 @@ const AIInsights = ({ insights, loading, error, onRetry, demoMode }) => {
     <div className="ai-insights">
       <h3>AI-Generated Insights</h3>
       <p className="insights-subtitle">
-        {demoMode 
-          ? '🚀 Demo Mode - Realistic AI insights without API usage'
-          : 'Powered by Google Gemini AI - Deep analysis of repository patterns and characteristics'
-        }
+        Powered by Cohere AI - Deep analysis of repository patterns and characteristics
       </p>
       
       <div className="insights-grid">

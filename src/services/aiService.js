@@ -1,18 +1,11 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
 class AIService {
   constructor() {
-    this.genAI = null;
-    this.model = null;
+    this.apiKey = null;
     this.initializeAI();
   }
 
   initializeAI() {
-    const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
-    if (apiKey) {
-      this.genAI = new GoogleGenerativeAI(apiKey);
-      this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
-    }
+    this.apiKey = process.env.REACT_APP_COHERE_API_KEY;
   }
 
   async sleep(ms) {
@@ -20,21 +13,41 @@ class AIService {
   }
 
   async generateWithRetry(prompt, maxRetries = 2) {
-    if (!this.model) {
-      throw new Error('AI service not initialized. Please add REACT_APP_GEMINI_API_KEY to your .env file');
+    if (!this.apiKey) {
+      throw new Error('AI service not initialized. Please add REACT_APP_COHERE_API_KEY to your .env file');
     }
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const result = await this.model.generateContent(prompt);
-        const response = await result.response;
-        return response.text();
+        const response = await fetch('https://api.cohere.ai/v1/generate', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'command',
+            prompt: prompt,
+            max_tokens: 300,
+            temperature: 0.7,
+            stop_sequences: [],
+          }),
+        });
+
+        if (!response.ok) {
+          if (response.status === 429) {
+            throw new Error('Rate limit exceeded');
+          }
+          throw new Error(`API request failed: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.generations[0].text.trim();
       } catch (error) {
         const isRateLimit = error.message.includes('429') || 
                            error.message.includes('quota') || 
                            error.message.includes('rate limit') ||
-                           error.status === 429 ||
-                           error.response?.status === 429;
+                           error.message.includes('Rate limit');
         
         if (isRateLimit && attempt < maxRetries) {
           // Longer delays for rate limiting
@@ -45,7 +58,7 @@ class AIService {
         }
         
         if (isRateLimit) {
-          throw new Error('AI service rate limit exceeded. The free Gemini API allows ~15 requests per minute. Please wait a few minutes before trying again.');
+          throw new Error('AI service rate limit exceeded. Please wait a few minutes before trying again.');
         }
         
         throw error;

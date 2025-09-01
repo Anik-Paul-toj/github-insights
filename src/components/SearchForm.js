@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import './SearchForm.css';
 
-const SearchForm = ({ onSearch, loading, onToggleDemo, demoMode }) => {
+const SearchForm = ({ onSearch, loading }) => {
   const [owner, setOwner] = useState('');
   const [repo, setRepo] = useState('');
 
@@ -17,26 +17,6 @@ const SearchForm = ({ onSearch, loading, onToggleDemo, demoMode }) => {
     <div className="search-form">
       <h1>GitHub Repository Insights</h1>
       <p>Enter a GitHub repository to get detailed insights and AI-powered analysis</p>
-      
-      <div className="demo-toggle">
-        <label className="toggle-container">
-          <input
-            type="checkbox"
-            checked={demoMode}
-            onChange={onToggleDemo}
-          />
-          <span className="toggle-slider"></span>
-          <span className="toggle-label">
-            {demoMode ? '🚀 Demo Mode (No API calls)' : '🤖 Live AI Mode (Uses API)'}
-          </span>
-        </label>
-        <p className="demo-info">
-          {demoMode 
-            ? 'Demo mode shows realistic AI insights without using your API quota'
-            : 'Live mode uses real AI but may hit rate limits on free tier'
-          }
-        </p>
-      </div>
       
       <form onSubmit={handleSubmit} className="search-container">
         <div className="input-group">

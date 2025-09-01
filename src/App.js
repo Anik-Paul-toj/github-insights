@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LandingPage from './components/LandingPage';
 import SearchForm from './components/SearchForm';
 import StatsCard from './components/StatsCard';
 import LanguageChart from './components/LanguageChart';
@@ -7,10 +8,10 @@ import AIInsights from './components/AIInsights';
 import LoadingSpinner from './components/LoadingSpinner';
 import githubService from './services/githubService';
 import aiService from './services/aiService';
-import { getDemoInsightsForRepo } from './services/demoData';
 import './App.css';
 
 function App() {
+  const [showDashboard, setShowDashboard] = useState(false);
   const [loading, setLoading] = useState(false);
   const [repoData, setRepoData] = useState(null);
   const [languages, setLanguages] = useState(null);
@@ -20,22 +21,12 @@ function App() {
   const [error, setError] = useState(null);
   const [aiError, setAiError] = useState(null);
   const [contributorsData, setContributorsData] = useState(null);
-  const [demoMode, setDemoMode] = useState(true); // Default to demo mode for free tier
 
   const generateAIInsights = async (repoInfo, languagesData, contributorsData) => {
     setAiLoading(true);
     setAiError(null);
     
     try {
-      if (demoMode) {
-        // Use demo data to avoid hitting API rate limits
-        console.log('Using demo mode for AI insights...');
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate loading
-        const demoInsights = getDemoInsightsForRepo(repoInfo);
-        setAiInsights(demoInsights);
-        return;
-      }
-
       const readmeContent = await githubService.getReadme(repoInfo.owner.login, repoInfo.name);
       const insights = {};
       
@@ -88,9 +79,12 @@ function App() {
     }
   };
 
+  const handleGetStarted = () => {
+    setShowDashboard(true);
+  };
+
   const toggleDemoMode = () => {
-    setDemoMode(!demoMode);
-    setAiInsights(null); // Clear current insights when switching modes
+    // Remove this function as we're not using demo mode anymore
   };
 
   const handleSearch = async (owner, repo) => {
@@ -147,35 +141,42 @@ function App() {
 
   return (
     <div className="App">
-      <div className="container">
-        <SearchForm 
-          onSearch={handleSearch} 
-          loading={loading} 
-          demoMode={demoMode}
-          onToggleDemo={toggleDemoMode}
-        />
-        
-        {error && (
-          <div className="error-message">
-            <p>Error: {error}</p>
-          </div>
-        )}
+      {!showDashboard ? (
+        <LandingPage onGetStarted={handleGetStarted} />
+      ) : (
+        <div className="container">
+          <SearchForm 
+            onSearch={handleSearch} 
+            loading={loading} 
+          />
+          
+          {error && (
+            <div className="error-message">
+              <p>Error: {error}</p>
+            </div>
+          )}
 
-        {repoData && (
-          <>
-            <StatsCard repoData={repoData} />
-            <LanguageChart languages={languages} />
-            <CommitChart commitActivity={commitActivity} />
-            <AIInsights 
-              insights={aiInsights} 
-              loading={aiLoading} 
-              error={aiError}
-              onRetry={handleRetryAI}
-              demoMode={demoMode}
-            />
-          </>
-        )}
-      </div>
+          {repoData && (
+            <>
+              <StatsCard repoData={repoData} />
+              <div className="charts-container">
+                <div className="chart-item language-chart">
+                  <LanguageChart languages={languages} />
+                </div>
+                <div className="chart-item commit-chart">
+                  <CommitChart commitActivity={commitActivity} />
+                </div>
+              </div>
+              <AIInsights 
+                insights={aiInsights} 
+                loading={aiLoading} 
+                error={aiError}
+                onRetry={handleRetryAI}
+              />
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
