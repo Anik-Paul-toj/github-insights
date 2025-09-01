@@ -142,9 +142,11 @@ function App() {
 
       if (commitActivityData.status === 'fulfilled') {
         console.log('Commit activity data:', commitActivityData.value);
+        console.log('Commit activity length:', commitActivityData.value?.length);
         setCommitActivity(commitActivityData.value);
       } else {
         console.warn('Failed to fetch commit activity:', commitActivityData.reason);
+        setCommitActivity([]); // Set empty array explicitly
       }
 
       if (contributorsData.status === 'fulfilled') {

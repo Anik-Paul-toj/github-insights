@@ -13,11 +13,46 @@
   font-weight: 600;
 }
 
-.no-data {
+.no-data-container {
   text-align: center;
-  color: #586069;
   padding: 2rem;
-  font-style: italic;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px dashed #d0d7de;
+}
+
+.no-data {
+  color: #656d76;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.no-data-subtitle {
+  color: #656d76;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.no-data-reasons {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.no-data-reasons li {
+  color: #656d76;
+  font-size: 0.85rem;
+  margin-bottom: 0.25rem;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.no-data-reasons li::before {
+  content: "•";
+  color: #0366d6;
+  position: absolute;
+  left: 0;
 }
 
 .activity-stats {

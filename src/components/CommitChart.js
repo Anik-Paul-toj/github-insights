@@ -7,7 +7,15 @@ const CommitChart = ({ commitActivity }) => {
     return (
       <div className="commit-chart">
         <h3>Commit Activity (Last 52 Weeks)</h3>
-        <p className="no-data">No commit activity data available</p>
+        <div className="no-data-container">
+          <p className="no-data">No commit activity data available</p>
+          <p className="no-data-subtitle">This could be due to:</p>
+          <ul className="no-data-reasons">
+            <li>Repository has no recent commits</li>
+            <li>GitHub API is still processing the data</li>
+            <li>Repository is private or has restricted access</li>
+          </ul>
+        </div>
       </div>
     );
   }
