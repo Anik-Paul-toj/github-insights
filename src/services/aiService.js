@@ -68,7 +68,7 @@ class AIService {
 
   async generateRepositorySummary(repoData, readmeContent) {
     const prompt = `
-    Analyze this GitHub repository and provide a concise, informative summary (2-3 sentences):
+    Analyze this GitHub repository and provide key insights in bullet points (2-3 short points):
     
     Repository Name: ${repoData.name}
     Description: ${repoData.description || 'No description provided'}
@@ -77,7 +77,7 @@ class AIService {
     Forks: ${repoData.forks_count}
     README Content: ${readmeContent ? readmeContent.substring(0, 1000) : 'No README available'}
     
-    Focus on the repository's purpose, main features, and significance.
+    Format as bullet points covering: purpose, main features, and key characteristics. Keep each point to 1 short sentence only.
     `;
 
     try {
@@ -93,13 +93,13 @@ class AIService {
       .join(', ');
 
     const prompt = `
-    Analyze this repository's technology stack and provide insights (2-3 sentences):
+    Analyze this repository's technology stack and provide key insights in bullet points (2-3 short points):
     
     Repository: ${repoData.name}
     Language Breakdown: ${languageBreakdown}
     Primary Language: ${repoData.language}
     
-    Explain what this technology stack suggests about the project type, architecture, and development approach.
+    Format as bullet points covering: technology choices, project type, and development approach. Keep each point to 1 short sentence only.
     `;
 
     try {
@@ -116,14 +116,14 @@ class AIService {
       .join(', ');
 
     const prompt = `
-    Analyze this repository's collaboration and contribution patterns (2-3 sentences):
+    Analyze this repository's collaboration and contribution patterns in bullet points (2-3 short points):
     
     Repository: ${repoData.name}
     Total Contributors: ${contributors.length}
     Top Contributors: ${contributorSummary}
     Repository Age: Created ${new Date(repoData.created_at).getFullYear()}
     
-    Describe the collaboration health, maintenance activity, and community engagement.
+    Format as bullet points covering: collaboration health, maintenance activity, and community engagement. Keep each point to 1 short sentence only.
     `;
 
     try {

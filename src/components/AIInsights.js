@@ -113,7 +113,19 @@ const AIInsights = ({ insights, loading, error, onRetry }) => {
               <Brain className="insight-icon" />
               <h4>Repository Summary</h4>
             </div>
-            <p className="insight-content">{insights.repositorySummary}</p>
+            <div className="insight-content">
+              {insights.repositorySummary.split('\n').map((line, index) => (
+                line.trim() && (
+                  <div key={index} className="insight-point">
+                    {line.trim().startsWith('•') || line.trim().startsWith('-') ? (
+                      <span className="bullet-point">{line.trim()}</span>
+                    ) : (
+                      <span className="bullet-point">• {line.trim()}</span>
+                    )}
+                  </div>
+                )
+              ))}
+            </div>
           </div>
         )}
         
@@ -123,7 +135,19 @@ const AIInsights = ({ insights, loading, error, onRetry }) => {
               <Code className="insight-icon" />
               <h4>Technology Stack Analysis</h4>
             </div>
-            <p className="insight-content">{insights.languageAnalysis}</p>
+            <div className="insight-content">
+              {insights.languageAnalysis.split('\n').map((line, index) => (
+                line.trim() && (
+                  <div key={index} className="insight-point">
+                    {line.trim().startsWith('•') || line.trim().startsWith('-') ? (
+                      <span className="bullet-point">{line.trim()}</span>
+                    ) : (
+                      <span className="bullet-point">• {line.trim()}</span>
+                    )}
+                  </div>
+                )
+              ))}
+            </div>
           </div>
         )}
         
@@ -133,7 +157,19 @@ const AIInsights = ({ insights, loading, error, onRetry }) => {
               <Users className="insight-icon" />
               <h4>Collaboration Patterns</h4>
             </div>
-            <p className="insight-content">{insights.contributionAnalysis}</p>
+            <div className="insight-content">
+              {insights.contributionAnalysis.split('\n').map((line, index) => (
+                line.trim() && (
+                  <div key={index} className="insight-point">
+                    {line.trim().startsWith('•') || line.trim().startsWith('-') ? (
+                      <span className="bullet-point">{line.trim()}</span>
+                    ) : (
+                      <span className="bullet-point">• {line.trim()}</span>
+                    )}
+                  </div>
+                )
+              ))}
+            </div>
           </div>
         )}
       </div>

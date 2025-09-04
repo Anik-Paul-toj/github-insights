@@ -2,6 +2,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0f0f0f 50%, #1a1a1a 75%, #0a0a0a 100%);
+  min-height: 100vh;
 }
 
 .dashboard-header {
@@ -10,22 +12,24 @@
   align-items: center;
   margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #e1e8ed;
+  border-bottom: 2px solid rgba(255, 120, 37, 0.3);
 }
 
 .dashboard-header h2 {
   margin: 0;
-  font-size: 28px;
-  font-weight: 600;
-  color: #24292e;
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 120, 37, 0.3);
 }
 
 .tab-switcher {
   display: flex;
-  background: #f6f8fa;
-  border-radius: 8px;
-  padding: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 120, 37, 0.1);
+  border: 1px solid rgba(255, 120, 37, 0.2);
+  border-radius: 16px;
+  padding: 6px;
+  backdrop-filter: blur(10px);
 }
 
 .tab-button {
@@ -35,23 +39,25 @@
   background: none;
   border: none;
   padding: 12px 20px;
-  border-radius: 6px;
+  border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #586069;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
 }
 
 .tab-button:hover {
-  background: #e1e8ed;
-  color: #24292e;
+  background: rgba(255, 120, 37, 0.2);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .tab-button.active {
-  background: white;
-  color: #0366d6;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #ff7825;
+  color: #000000;
+  box-shadow: 0 4px 15px rgba(255, 120, 37, 0.3);
+  transform: translateY(-1px);
 }
 
 .dashboard-content {
@@ -85,11 +91,18 @@
 }
 
 .chart-item {
-  background: white;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 120, 37, 0.2);
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e1e8ed;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.chart-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(255, 120, 37, 0.2);
+  border-color: rgba(255, 120, 37, 0.4);
 }
 
 /* Mobile Responsiveness */

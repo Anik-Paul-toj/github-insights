@@ -1,10 +1,12 @@
 import React from 'react';
 import { Github, BarChart3, Brain, Zap, TrendingUp, Code } from 'lucide-react';
+import ResizableNavbar from './ResizableNavbar';
 import './LandingPage.css';
 
 const LandingPage = ({ onGetStarted }) => {
   return (
     <div className="landing-page">
+      <ResizableNavbar onGetStarted={onGetStarted} />
       <div className="hero-section">
         <div className="hero-content">
           <div className="hero-text">
@@ -78,7 +80,7 @@ const LandingPage = ({ onGetStarted }) => {
         </div>
       </div>
 
-      <div className="features-section">
+      <div id="features" className="features-section">
         <div className="container">
           <h2 className="section-title">Powerful Features</h2>
           <div className="features-grid">
@@ -114,7 +116,7 @@ const LandingPage = ({ onGetStarted }) => {
         </div>
       </div>
 
-      <div className="cta-section">
+      <div id="about" className="cta-section">
         <div className="container">
           <div className="cta-content">
             <h2>Ready to explore repository insights?</h2>
@@ -123,6 +125,19 @@ const LandingPage = ({ onGetStarted }) => {
               <Github className="button-icon" />
               Analyze Repository
             </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="contact" className="contact-section">
+        <div className="container">
+          <div className="cta-content">
+            <h2>Get in Touch</h2>
+            <p>Have questions or feedback? We'd love to hear from you!</p>
+            <div className="contact-info">
+              <p>Built with ❤️ for the developer community</p>
+              <p>Powered by GitHub API & AI Technology</p>
+            </div>
           </div>
         </div>
       </div>

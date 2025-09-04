@@ -187,6 +187,15 @@ function App() {
     setError(null);
   };
 
+  const handleBackToLanding = () => {
+    setShowDashboard(false);
+    setShowRepositories(false);
+    setShowInsights(false);
+    setRepositories([]);
+    setError(null);
+    setAiError(null);
+  };
+
   return (
     <div className="App">
       {!showDashboard ? (
@@ -194,10 +203,17 @@ function App() {
       ) : (
         <div className="container">
           {!showRepositories && !showInsights && (
-            <SearchForm 
-              onSearchUser={handleSearchUser} 
-              loading={loading} 
-            />
+            <>
+              <div className="navigation-header">
+                <button onClick={handleBackToLanding} className="back-button">
+                  ← Back to Home
+                </button>
+              </div>
+              <SearchForm 
+                onSearchUser={handleSearchUser} 
+                loading={loading} 
+              />
+            </>
           )}
 
           {showRepositories && (
