@@ -3,7 +3,8 @@ import StatsCard from './StatsCard';
 import LanguageChart from './LanguageChart';
 import CommitChart from './CommitChart';
 import AIInsights from './AIInsights';
-import { BarChart3, Brain } from 'lucide-react';
+import RepositoryComparison from './RepositoryComparison';
+import { BarChart3, Brain, GitCompare } from 'lucide-react';
 import './Dashboard.css';
 
 const Dashboard = ({ 
@@ -16,7 +17,7 @@ const Dashboard = ({
   aiError, 
   onRetryAI 
 }) => {
-  const [activeTab, setActiveTab] = useState('insights'); // 'insights' or 'ai'
+  const [activeTab, setActiveTab] = useState('insights'); // 'insights', 'ai', or 'comparison'
 
   return (
     <div className="dashboard">
@@ -37,6 +38,13 @@ const Dashboard = ({
             <Brain size={20} />
             AI Analysis
           </button>
+          <button 
+            className={`tab-button ${activeTab === 'comparison' ? 'active' : ''}`}
+            onClick={() => setActiveTab('comparison')}
+          >
+            <GitCompare size={20} />
+            Comparison
+          </button>
         </div>
       </div>
 
@@ -53,13 +61,19 @@ const Dashboard = ({
               </div>
             </div>
           </div>
-        ) : (
+        ) : activeTab === 'ai' ? (
           <div className="ai-tab">
             <AIInsights 
               insights={aiInsights} 
               loading={aiLoading} 
               error={aiError}
               onRetry={onRetryAI}
+            />
+          </div>
+        ) : (
+          <div className="comparison-tab">
+            <RepositoryComparison 
+              repoData={repoData}
             />
           </div>
         )}
