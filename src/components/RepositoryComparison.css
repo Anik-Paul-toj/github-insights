@@ -431,6 +431,7 @@
 .suggestions-title {
   font-weight: 600;
   margin-bottom: 4px;
+  color: #dc2626;
 }
 
 .suggestions-subtitle {
@@ -461,6 +462,7 @@
 .basic-suggestions li {
   margin-bottom: 6px;
   line-height: 1.5;
+  color: #1f2937;
 }
 
 .basic-suggestions li:last-child {
@@ -576,6 +578,7 @@
 .rule-suggestions li {
   margin-bottom: 6px;
   line-height: 1.5;
+  color: #1f2937;
 }
 
 .ai-suggestions li:last-child,

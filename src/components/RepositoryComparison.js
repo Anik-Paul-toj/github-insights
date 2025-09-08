@@ -266,7 +266,7 @@ const RepositoryComparison = ({ repoData, onError }) => {
         {/* Custom user comparison section when auto-compare is disabled */}
         <div className="custom-compare">
           <div className="comparison-disabled-message">
-            <h4>🎯 Manual Repository Comparison</h4>
+            <h4>Manual Repository Comparison</h4>
             <p>Auto-comparison is disabled. Use the form below to manually compare with any repository.</p>
           </div>
           <div className="row">
@@ -349,67 +349,67 @@ const RepositoryComparison = ({ repoData, onError }) => {
       categoryGaps.forEach(({ category, signals }) => {
         if (category === 'scalability') {
           if (!yourQuality.scalability.signals.ci && signals.ci) {
-            suggestions.push(`🔄 Add CI workflows to run tests and lint on PRs (like ${comparedRepo.name}).`);
+            suggestions.push(`Add CI workflows to run tests and lint on PRs (like ${comparedRepo.name}).`);
           }
           if (!yourQuality.scalability.signals.docker && signals.docker) {
-            suggestions.push(`🐳 Provide Dockerfile/Compose for reproducible deployments (similar to ${comparedRepo.name}).`);
+            suggestions.push(`Provide Dockerfile/Compose for reproducible deployments (similar to ${comparedRepo.name}).`);
           }
           if (!yourQuality.scalability.signals.kubernetes && signals.kubernetes) {
-            suggestions.push(`☸️ Include Kubernetes/Helm manifests for scalable ops (like ${comparedRepo.name}).`);
+            suggestions.push(`Include Kubernetes/Helm manifests for scalable ops (like ${comparedRepo.name}).`);
           }
         } else if (category === 'security') {
           if (!yourQuality.security.signals.codeql && signals.codeql) {
-            suggestions.push(`🔍 Enable CodeQL security scanning (following ${comparedRepo.name}'s approach).`);
+            suggestions.push(`Enable CodeQL security scanning (following ${comparedRepo.name}'s approach).`);
           }
           if (!yourQuality.security.signals.dependabot && signals.dependabot) {
-            suggestions.push(`🤖 Configure Dependabot for dependency updates (like ${comparedRepo.name}).`);
+            suggestions.push(`Configure Dependabot for dependency updates (like ${comparedRepo.name}).`);
           }
           if (!yourQuality.security.signals.securityPolicy && signals.securityPolicy) {
-            suggestions.push(`🛡️ Add SECURITY.md for vulnerability reporting (similar to ${comparedRepo.name}).`);
+            suggestions.push(`Add SECURITY.md for vulnerability reporting (similar to ${comparedRepo.name}).`);
           }
         } else if (category === 'structure') {
           if (!yourQuality.structure.signals.tests && signals.tests) {
-            suggestions.push(`🧪 Add automated tests and testing framework (following ${comparedRepo.name}'s pattern).`);
+            suggestions.push(`Add automated tests and testing framework (following ${comparedRepo.name}'s pattern).`);
           }
           if (!yourQuality.structure.signals.lint && signals.lint) {
-            suggestions.push(`✨ Add code linting and formatting tools (like ${comparedRepo.name}).`);
+            suggestions.push(`Add code linting and formatting tools (like ${comparedRepo.name}).`);
           }
           if (!yourQuality.structure.signals.typescript && signals.typescript) {
-            suggestions.push(`📘 Consider TypeScript for better type safety (similar to ${comparedRepo.name}).`);
+            suggestions.push(`Consider TypeScript for better type safety (similar to ${comparedRepo.name}).`);
           }
         } else if (category === 'management') {
           if (!yourQuality.management.signals.contributing && signals.contributing) {
-            suggestions.push(`📋 Add CONTRIBUTING.md to guide contributors (following ${comparedRepo.name}'s example).`);
+            suggestions.push(`Add CONTRIBUTING.md to guide contributors (following ${comparedRepo.name}'s example).`);
           }
           if (!yourQuality.management.signals.issueTemplates && signals.issueTemplates) {
-            suggestions.push(`📝 Provide issue templates for better bug reports (like ${comparedRepo.name}).`);
+            suggestions.push(`Provide issue templates for better bug reports (like ${comparedRepo.name}).`);
           }
           if (!yourQuality.management.signals.prTemplate && signals.prTemplate) {
-            suggestions.push(`🔀 Add a pull request template (similar to ${comparedRepo.name}).`);
+            suggestions.push(`Add a pull request template (similar to ${comparedRepo.name}).`);
           }
           if (!yourQuality.management.signals.changelog && signals.changelog) {
-            suggestions.push(`📄 Maintain a CHANGELOG.md for releases (like ${comparedRepo.name}).`);
+            suggestions.push(`Maintain a CHANGELOG.md for releases (like ${comparedRepo.name}).`);
           }
         }
       });
       
       // Add repository-specific suggestions based on stats comparison
       if (comparedRepo.stars > repoData.stargazers_count * 2) {
-        suggestions.push(`⭐ Focus on documentation and examples to increase community adoption (${comparedRepo.name} has ${formatNumber(comparedRepo.stars)} stars).`);
+        suggestions.push(`Focus on documentation and examples to increase community adoption (${comparedRepo.name} has ${formatNumber(comparedRepo.stars)} stars).`);
       }
       
       if (comparedRepo.forks > repoData.forks_count * 2) {
-        suggestions.push(`🍴 Make your project more fork-friendly with clear setup instructions (${comparedRepo.name} has ${formatNumber(comparedRepo.forks)} forks).`);
+        suggestions.push(`Make your project more fork-friendly with clear setup instructions (${comparedRepo.name} has ${formatNumber(comparedRepo.forks)} forks).`);
       }
     }
     
     // If no comparison-based suggestions, fall back to general ones for missing features
     if (suggestions.length === 0) {
-      if (!yourQuality.scalability.signals.ci) suggestions.push('🔄 Add CI workflows to run tests and lint on PRs.');
-      if (!yourQuality.scalability.signals.docker) suggestions.push('🐳 Provide Dockerfile/Compose for reproducible deployments.');
-      if (!yourQuality.security.signals.dependabot) suggestions.push('🤖 Configure Dependabot for dependency updates.');
-      if (!yourQuality.structure.signals.tests) suggestions.push('🧪 Add automated tests and a testing framework.');
-      if (!yourQuality.management.signals.contributing) suggestions.push('📋 Add CONTRIBUTING.md to guide contributors.');
+      if (!yourQuality.scalability.signals.ci) suggestions.push('Add CI workflows to run tests and lint on PRs.');
+      if (!yourQuality.scalability.signals.docker) suggestions.push('Provide Dockerfile/Compose for reproducible deployments.');
+      if (!yourQuality.security.signals.dependabot) suggestions.push('Configure Dependabot for dependency updates.');
+      if (!yourQuality.structure.signals.tests) suggestions.push('Add automated tests and a testing framework.');
+      if (!yourQuality.management.signals.contributing) suggestions.push('Add CONTRIBUTING.md to guide contributors.');
     }
     
     return suggestions.slice(0, 5);
@@ -420,27 +420,27 @@ const RepositoryComparison = ({ repoData, onError }) => {
     
     // Compare basic metrics
     if (comparedRepo.stars > yourRepo.stars * 2) {
-      suggestions.push(`⭐ Improve documentation and README to increase visibility (${comparedRepo.name} has ${formatNumber(comparedRepo.stars)} stars vs your ${formatNumber(yourRepo.stars)}).`);
+      suggestions.push(`Improve documentation and README to increase visibility (${comparedRepo.name} has ${formatNumber(comparedRepo.stars)} stars vs your ${formatNumber(yourRepo.stars)}).`);
     }
     
     if (comparedRepo.forks > yourRepo.forks * 2) {
-      suggestions.push(`🍴 Make your project more contributor-friendly with clear setup instructions (${comparedRepo.name} has ${formatNumber(comparedRepo.forks)} forks vs your ${formatNumber(yourRepo.forks)}).`);
+      suggestions.push(`Make your project more contributor-friendly with clear setup instructions (${comparedRepo.name} has ${formatNumber(comparedRepo.forks)} forks vs your ${formatNumber(yourRepo.forks)}).`);
     }
     
     // Language-specific suggestions
     if (yourRepo.language && yourRepo.language === comparedRepo.language) {
-      suggestions.push(`🔧 Consider adopting similar ${yourRepo.language} best practices as ${comparedRepo.name}.`);
+      suggestions.push(`Consider adopting similar ${yourRepo.language} best practices as ${comparedRepo.name}.`);
     }
     
     // Topic suggestions
     if (comparedRepo.topics && comparedRepo.topics.length > 0) {
       const relevantTopics = comparedRepo.topics.slice(0, 3).join(', ');
-      suggestions.push(`🏷️ Add relevant topics to improve discoverability (${comparedRepo.name} uses: ${relevantTopics}).`);
+      suggestions.push(`Add relevant topics to improve discoverability (${comparedRepo.name} uses: ${relevantTopics}).`);
     }
     
     // General suggestions
-    suggestions.push(`📚 Study ${comparedRepo.name}'s repository structure and documentation approach.`);
-    suggestions.push(`🚀 Consider implementing similar features that make ${comparedRepo.name} successful.`);
+    suggestions.push(`Study ${comparedRepo.name}'s repository structure and documentation approach.`);
+    suggestions.push(`Consider implementing similar features that make ${comparedRepo.name} successful.`);
     
     return suggestions.slice(0, 4);
   };
@@ -482,11 +482,11 @@ const RepositoryComparison = ({ repoData, onError }) => {
       {/* Custom user comparison */}
       <div className="custom-compare">
         <div className="custom-compare-header">
-          <h4>🔍 Compare with Specific Repository</h4>
+          <h4>Compare with Specific Repository</h4>
           <p>Want to compare with a different repository? Search for any GitHub user or organization below.</p>
           {enableRandomComparison && (
             <div className="auto-compare-notice">
-              <small>💡 Auto-comparison is enabled. This will replace the current random comparison.</small>
+              <small>Auto-comparison is enabled. This will replace the current random comparison.</small>
             </div>
           )}
         </div>
@@ -752,13 +752,13 @@ const RepositoryComparison = ({ repoData, onError }) => {
                   {/* AI Suggestions */}
                   {aiSuggestionsLoading && (
                     <div className="ai-suggestions-loading">
-                      <div className="loading-text">🤖 Generating AI-powered suggestions...</div>
+                      <div className="loading-text">Generating AI-powered suggestions...</div>
                     </div>
                   )}
                   
                   {aiSuggestions && aiSuggestions.length > 0 && (
                     <div className="ai-suggestions-section">
-                      <div className="section-header">🤖 AI-Powered Suggestions</div>
+                      <div className="section-header">AI-Powered Suggestions</div>
                       <ul className="ai-suggestions">
                         {aiSuggestions.map((suggestion, i) => (
                           <li key={i}>{suggestion}</li>
@@ -770,7 +770,7 @@ const RepositoryComparison = ({ repoData, onError }) => {
                   {/* Rule-based suggestions */}
                   {repository1.quality && (
                     <div className="rule-suggestions-section">
-                      <div className="section-header">⚡ Quick Wins</div>
+                      <div className="section-header">Quick Wins</div>
                       <ul className="rule-suggestions">
                         {buildSuggestions(repository1.quality, repository2).map((s, i) => (
                           <li key={i}>{s}</li>
@@ -782,7 +782,7 @@ const RepositoryComparison = ({ repoData, onError }) => {
                   {/* Basic suggestions when no quality data available */}
                   {!repository1.quality && !aiSuggestions && !aiSuggestionsLoading && (
                     <div className="basic-suggestions-section">
-                      <div className="section-header">💡 General Suggestions</div>
+                      <div className="section-header">General Suggestions</div>
                       <ul className="basic-suggestions">
                         {buildBasicSuggestions(repository1, repository2).map((s, i) => (
                           <li key={i}>{s}</li>
