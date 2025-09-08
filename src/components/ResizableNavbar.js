@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Zap } from 'lucide-react';
+import { Menu, X, Github } from 'lucide-react';
 import './ResizableNavbar.css';
 
 const ResizableNavbar = ({ onGetStarted }) => {
@@ -54,10 +54,6 @@ const ResizableNavbar = ({ onGetStarted }) => {
           </div>
           
           <div className="navbar-actions">
-            <button className="navbar-button secondary">
-              <Zap size={16} />
-              Demo
-            </button>
             <button 
               className="navbar-button primary"
               onClick={onGetStarted}
@@ -95,13 +91,6 @@ const ResizableNavbar = ({ onGetStarted }) => {
                 </a>
               ))}
               <div className="mobile-nav-actions">
-                <button 
-                  className="navbar-button secondary mobile"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Zap size={16} />
-                  Demo
-                </button>
                 <button 
                   className="navbar-button primary mobile"
                   onClick={() => {
