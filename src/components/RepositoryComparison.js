@@ -453,12 +453,6 @@ const RepositoryComparison = ({ repoData, onError }) => {
             <GitCompare size={20} />
             Repository Comparison
           </h3>
-          {comparison?.domain && (
-            <div className="domain-badge">
-              <span className="domain-label">Domain:</span>
-              <span className="domain-name">{comparison.domain.name}</span>
-            </div>
-          )}
         </div>
         <div className="header-controls">
           <div className="toggle-container">
