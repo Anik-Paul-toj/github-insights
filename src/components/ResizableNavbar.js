@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Github } from 'lucide-react';
 import './ResizableNavbar.css';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ResizableNavbar = ({ onGetStarted }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { user, githubUsername, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,16 +24,17 @@ const ResizableNavbar = ({ onGetStarted }) => {
     {
       name: "Features",
       link: "#features",
-    },
-    {
-      name: "About",
-      link: "#about",
-    },
-    {
-      name: "Contact",
-      link: "#contact",
-    },
+    }
   ];
+
+  const handleScrollTo = (selector) => (e) => {
+    if (!selector.startsWith('#')) return;
+    const el = document.querySelector(selector);
+    if (el) {
+      e.preventDefault();
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <div className={`resizable-navbar ${isScrolled ? 'scrolled' : ''}`}>
@@ -46,20 +51,27 @@ const ResizableNavbar = ({ onGetStarted }) => {
               <a
                 key={`nav-link-${idx}`}
                 href={item.link}
+                onClick={handleScrollTo(item.link)}
                 className="nav-item"
               >
                 {item.name}
               </a>
             ))}
+            <a href="#commit-activity" onClick={handleScrollTo('#commit-activity')} className="nav-item">Commit Activity</a>
           </div>
           
           <div className="navbar-actions">
-            <button 
-              className="navbar-button primary"
-              onClick={onGetStarted}
-            >
-              Get Started
-            </button>
+            {user ? (
+              <>
+                <span className="nav-item">{githubUsername}</span>
+                <button className="navbar-button" onClick={() => logout()}>Logout</button>
+              </>
+            ) : (
+              <>
+                <button className="navbar-button" onClick={() => navigate('/login')}>Login</button>
+                <button className="navbar-button primary" onClick={() => navigate('/signup')}>Sign Up</button>
+              </>
+            )}
           </div>
         </div>
 
@@ -84,12 +96,19 @@ const ResizableNavbar = ({ onGetStarted }) => {
                 <a
                   key={`mobile-link-${idx}`}
                   href={item.link}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => { handleScrollTo(item.link)(e); setIsMobileMenuOpen(false); }}
                   className="mobile-nav-item"
                 >
                   {item.name}
                 </a>
               ))}
+              <a
+                href="#commit-activity"
+                onClick={(e) => { handleScrollTo('#commit-activity')(e); setIsMobileMenuOpen(false); }}
+                className="mobile-nav-item"
+              >
+                Commit Activity
+              </a>
               <div className="mobile-nav-actions">
                 <button 
                   className="navbar-button primary mobile"

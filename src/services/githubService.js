@@ -15,6 +15,58 @@ class GitHubService {
     });
   }
 
+  async getUserContributions(username) {
+    // Uses GitHub GraphQL API to fetch the contributions calendar which matches the GitHub profile grid
+    const token = process.env.REACT_APP_GITHUB_TOKEN;
+    if (!token) {
+      // Without a token, GraphQL endpoint will be rate-limited or unavailable
+      return null;
+    }
+    const endpoint = 'https://api.github.com/graphql';
+    const now = new Date();
+    const from = new Date();
+    from.setFullYear(from.getFullYear() - 1);
+    const query = `
+      query($login:String!, $from:DateTime!, $to:DateTime!){
+        user(login:$login){
+          contributionsCollection(from:$from, to:$to){
+            contributionCalendar{
+              totalContributions
+              weeks{
+                firstDay
+                contributionDays{ date contributionCount }
+              }
+            }
+          }
+        }
+      }
+    `;
+    const variables = { login: username, from: from.toISOString(), to: now.toISOString() };
+    try {
+      const res = await axios.post(
+        endpoint,
+        { query, variables },
+        { headers: { 'Content-Type': 'application/json', 'Authorization': `bearer ${token}` } }
+      );
+      const weeks = res?.data?.data?.user?.contributionsCollection?.contributionCalendar?.weeks || [];
+      if (!Array.isArray(weeks) || weeks.length === 0) return [];
+      // Transform to [{ week, total, days: [..7..] }]
+      const transformed = weeks.map(w => {
+        const weekTs = Math.floor(new Date(w.firstDay).getTime() / 1000);
+        const days = (w.contributionDays || []).map(d => d.contributionCount);
+        return {
+          week: weekTs,
+          total: days.reduce((a, b) => a + (b || 0), 0),
+          days
+        };
+      });
+      return transformed;
+    } catch (e) {
+      console.warn('GraphQL contributions fetch failed', e?.message || e);
+      return null;
+    }
+  }
+
   async getUserRepositories(username, page = 1, per_page = 30) {
     try {
       const response = await this.api.get(`/users/${username}/repos`, {
@@ -28,6 +80,19 @@ class GitHubService {
     } catch (error) {
       throw new Error(`Failed to fetch repositories: ${error.message}`);
     }
+  }
+
+  async getAllUserRepositories(username, maxPages = 5) {
+    const per_page = 100;
+    let page = 1;
+    const all = [];
+    while (page <= maxPages) {
+      const batch = await this.getUserRepositories(username, page, per_page);
+      all.push(...batch);
+      if (!Array.isArray(batch) || batch.length < per_page) break;
+      page += 1;
+    }
+    return all;
   }
 
   async getRepository(owner, repo) {
@@ -50,14 +115,18 @@ class GitHubService {
 
   async getCommitActivity(owner, repo) {
     try {
-      // First try the stats API
-      const statsResponse = await this.api.get(`/repos/${owner}/${repo}/stats/commit_activity`);
-      if (Array.isArray(statsResponse.data) && statsResponse.data.length > 0) {
-        return statsResponse.data;
+      // First try the stats API with retries, as GitHub may need time to generate stats
+      const maxRetries = 6; // ~6s total wait
+      const delayMs = 1000;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        const statsResponse = await this.api.get(`/repos/${owner}/${repo}/stats/commit_activity`);
+        if (Array.isArray(statsResponse.data) && statsResponse.data.length > 0) {
+          return statsResponse.data;
+        }
+        // 202 Accepted or empty array: wait and retry
+        await new Promise(res => setTimeout(res, delayMs));
       }
-      
-      // If stats API returns empty, fall back to commits API
-      console.log('Stats API returned empty data, falling back to commits API...');
+      // If stats API still returns empty, fall back to commits API
       return await this.getCommitActivityFallback(owner, repo);
     } catch (error) {
       console.warn(`Failed to fetch commit activity from stats API: ${error.message}`);

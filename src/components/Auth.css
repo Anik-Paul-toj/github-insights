@@ -1,0 +1,142 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(60% 60% at 50% 0%, rgba(255, 120, 37, 0.06) 0%, rgba(0, 0, 0, 0) 60%), #0a0a0a;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 120, 37, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(255, 120, 37, 0.15);
+  padding: 28px;
+  color: #e5e7eb;
+}
+
+.auth-header {
+  margin-bottom: 20px;
+}
+
+.auth-title {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.auth-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.auth-input {
+  width: 100%;
+  background: #0a0f1c;
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.auth-input:focus {
+  border-color: #ff7825;
+  box-shadow: 0 0 0 3px rgba(255, 120, 37, 0.25);
+}
+
+.auth-button {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #1f2937;
+  color: #e5e7eb;
+  cursor: pointer;
+}
+
+.auth-button.primary {
+  background: #ff7825;
+  border-color: #ff7825;
+  color: #000000;
+  box-shadow: 0 4px 15px rgba(255, 120, 37, 0.3);
+}
+
+.auth-button.primary:hover {
+  background: #ff8c42;
+  border-color: #ff8c42;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 120, 37, 0.4);
+}
+
+.auth-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.auth-separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+.auth-separator::before,
+.auth-separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 120, 37, 0.2);
+}
+
+.auth-alt {
+  display: grid;
+  gap: 10px;
+}
+
+.github-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #171515;
+  color: #ffffff;
+}
+
+.auth-footer {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.auth-footer a {
+  color: #ffb27a;
+  text-decoration: none;
+}
+
+.error-inline {
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+

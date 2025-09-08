@@ -1,9 +1,32 @@
-import React from 'react';
-import { Github, BarChart3, Brain, Zap, TrendingUp, Code } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Github, Brain, Zap, TrendingUp, Code, BarChart3 } from 'lucide-react';
 import ResizableNavbar from './ResizableNavbar';
 import './LandingPage.css';
+import githubService from '../services/githubService';
+import { useAuth } from '../context/AuthContext';
+import CommitActivitySection from './CommitActivitySection';
 
 const LandingPage = ({ onGetStarted }) => {
+  const { githubUsername } = useAuth();
+  const [totals, setTotals] = useState({ stars: 0, forks: 0 });
+  const [scrollKey, setScrollKey] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      if (!githubUsername) return;
+      try {
+        const repos = await githubService.getAllUserRepositories(githubUsername, 3);
+        if (cancelled) return;
+        const stars = repos.reduce((s, r) => s + (r.stargazers_count || 0), 0);
+        const forks = repos.reduce((s, r) => s + (r.forks_count || 0), 0);
+        setTotals({ stars, forks });
+      } catch {}
+    };
+    load();
+    return () => { cancelled = true; };
+  }, [githubUsername]);
+
   return (
     <div className="landing-page">
       <ResizableNavbar onGetStarted={onGetStarted} />
@@ -52,24 +75,32 @@ const LandingPage = ({ onGetStarted }) => {
                   <div className="stat-card">
                     <Code className="stat-icon" />
                     <div className="stat-info">
-                      <span className="stat-number">2.5k</span>
+                      <span className="stat-number">{new Intl.NumberFormat('en', { notation: 'compact' }).format(totals.stars)}</span>
                       <span className="stat-label">Stars</span>
                     </div>
                   </div>
                   <div className="stat-card">
                     <Github className="stat-icon" />
                     <div className="stat-info">
-                      <span className="stat-number">487</span>
+                      <span className="stat-number">{new Intl.NumberFormat('en', { notation: 'compact' }).format(totals.forks)}</span>
                       <span className="stat-label">Forks</span>
                     </div>
                   </div>
                 </div>
                 <div className="preview-chart">
-                  <div className="chart-placeholder">
-                    <BarChart3 className="chart-icon" />
-                    <span>Language Distribution</span>
-                  </div>
-                  <div className="chart-placeholder">
+                  <div className="chart-placeholder" onClick={() => {
+                    const el = document.getElementById('commit-activity');
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                      // force render attempt if not mounted yet
+                      setScrollKey(k => k + 1);
+                      setTimeout(() => {
+                        const el2 = document.getElementById('commit-activity');
+                        if (el2) el2.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }, 100);
+                    }
+                  }} style={{ cursor: 'pointer' }}>
                     <TrendingUp className="chart-icon" />
                     <span>Commit Activity</span>
                   </div>
@@ -79,6 +110,8 @@ const LandingPage = ({ onGetStarted }) => {
           </div>
         </div>
       </div>
+
+      <CommitActivitySection key={scrollKey} githubUsername={githubUsername} />
 
       <div id="features" className="features-section">
         <div className="container">
@@ -115,32 +148,7 @@ const LandingPage = ({ onGetStarted }) => {
           </div>
         </div>
       </div>
-
-      <div id="about" className="cta-section">
-        <div className="container">
-          <div className="cta-content">
-            <h2>Ready to explore repository insights?</h2>
-            <p>Start analyzing any public GitHub repository in seconds</p>
-            <button className="cta-button secondary" onClick={onGetStarted}>
-              <Github className="button-icon" />
-              Analyze Repository
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div id="contact" className="contact-section">
-        <div className="container">
-          <div className="cta-content">
-            <h2>Get in Touch</h2>
-            <p>Have questions or feedback? We'd love to hear from you!</p>
-            <div className="contact-info">
-              <p>Built with ❤️ for the developer community</p>
-              <p>Powered by GitHub API & AI Technology</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   );
 };
