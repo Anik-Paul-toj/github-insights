@@ -224,17 +224,71 @@ class ComparisonService {
     return shuffled;
   }
 
-  // Get a random similar repository
+  // Get a domain-appropriate similar repository (avoids mismatched comparisons)
   async getRandomSimilarRepository(repoData) {
     try {
-      const similarRepos = await this.findSimilarRepositories(repoData, 20);
+      const similarRepos = await this.findSimilarRepositories(repoData, 50);
       if (similarRepos.length === 0) {
         throw new Error('No similar repositories found');
       }
-      
-      // Pick a random repository
-      const randomIndex = Math.floor(Math.random() * similarRepos.length);
-      return similarRepos[randomIndex];
+
+      // Prefer repositories that match domain and language closely
+      const domain = this.identifyRepositoryDomain(repoData);
+      const language = repoData.language;
+
+      // Hard filters to avoid wildly different repos
+      const baseStars = repoData.stargazers_count || 0;
+      const baseSize = repoData.size || 0;
+      const topics1 = repoData.topics || [];
+
+      const filtered = similarRepos.filter(r => {
+        // Language must match if known
+        if (language && r.language && r.language !== language) return false;
+        // If we can infer domain, ensure at least one domain keyword appears
+        if (domain) {
+          const text = `${r.name} ${r.description || ''} ${(r.topics || []).join(' ')}`.toLowerCase();
+          const domainHit = domain.keywords.some(k => text.includes(k));
+          if (!domainHit) return false;
+        }
+        // Keep size within a reasonable band when available
+        if (baseSize > 0 && r.size) {
+          const minSize = Math.max(10, Math.floor(baseSize * 0.3));
+          const maxSize = Math.ceil(baseSize * 3.5);
+          if (r.size < minSize || r.size > maxSize) return false;
+        }
+        // Avoid huge popularity gaps for tiny repos
+        if (baseStars < 50 && (r.stargazers_count || 0) > 2000) return false;
+        // If topics exist, require at least one overlap
+        if (topics1.length > 0) {
+          const common = this.findCommonTopics(topics1, r.topics || []);
+          if (common.length === 0) return false;
+        }
+        return true;
+      });
+
+      const pool = filtered.length > 0 ? filtered : similarRepos;
+
+      const scored = pool.map(r => {
+        let score = 0;
+        // Stars give general popularity/context
+        score += Math.min(50, Math.log10((r.stargazers_count || 1) + 1) * 10);
+        // License presence is a quality signal
+        if (r.license?.name) score += 5;
+        // Language match is important
+        if (language && r.language === language) score += 25;
+        // Topics overlap
+        const commonTopics = this.findCommonTopics(topics1, r.topics || []);
+        score += Math.min(15, commonTopics.length * 3);
+        // Domain keyword matches in name/description
+        if (domain) {
+          const text = `${r.name} ${r.description || ''} ${(r.topics || []).join(' ')}`.toLowerCase();
+          domain.keywords.forEach(k => { if (text.includes(k)) score += 3; });
+        }
+        return { repo: r, score };
+      });
+
+      scored.sort((a, b) => b.score - a.score);
+      return scored[0].repo;
     } catch (error) {
       throw new Error(`Failed to get random similar repository: ${error.message}`);
     }
@@ -371,10 +425,136 @@ class ComparisonService {
         this.api.get(`/repos/${repo2.owner.login}/${repo2.name}`)
       ]);
 
-      return this.compareRepositories(repo1Details.data, repo2Details.data);
+      // Analyze engineering quality signals (security, scalability, structure, management)
+      const [q1, q2] = await Promise.all([
+        this.analyzeRepositoryQuality(repo1Details.data).catch(() => null),
+        this.analyzeRepositoryQuality(repo2Details.data).catch(() => null)
+      ]);
+
+      const base = this.compareRepositories(repo1Details.data, repo2Details.data);
+      if (q1 && q2) {
+        base.repository1.quality = q1;
+        base.repository2.quality = q2;
+        base.comparison.qualityScores = {
+          repo1: q1.totalScore,
+          repo2: q2.totalScore
+        };
+        // Nudge winner based on quality (up to 10 points)
+        if (q1.totalScore !== q2.totalScore) {
+          const diff = Math.sign(q1.totalScore - q2.totalScore);
+          if (diff > 0 && base.winner !== 'repository1') base.winner = 'repository1';
+          if (diff < 0 && base.winner !== 'repository2') base.winner = 'repository2';
+        }
+      }
+      return base;
     } catch (error) {
       // Fallback to basic comparison if detailed fetch fails
       return this.compareRepositories(repo1, repo2);
+    }
+  }
+
+  async analyzeRepositoryQuality(repo) {
+    const owner = repo.owner.login;
+    const name = repo.name;
+
+    const exists = async (path) => {
+      try {
+        await this.api.get(`/repos/${owner}/${name}/contents/${encodeURIComponent(path)}`);
+        return true;
+      } catch {
+        return false;
+      }
+    };
+
+    const files = await Promise.all([
+      exists('.github/workflows'),
+      exists('.github/workflows/codeql.yml'),
+      exists('.github/dependabot.yml'),
+      exists('Dockerfile'),
+      exists('docker-compose.yml'),
+      exists('kubernetes'),
+      exists('.k8s'),
+      exists('helm'),
+      exists('SECURITY.md'),
+      exists('CODE_OF_CONDUCT.md'),
+      exists('CONTRIBUTING.md'),
+      exists('.github/ISSUE_TEMPLATE'),
+      exists('.github/PULL_REQUEST_TEMPLATE.md'),
+      exists('package.json'),
+      exists('pnpm-workspace.yaml'),
+      exists('yarn.lock'),
+      exists('tsconfig.json'),
+      exists('jest.config.js'),
+      exists('jest.config.ts'),
+      exists('__tests__'),
+      exists('tests'),
+      exists('.eslintrc.js'),
+      exists('.eslintrc.cjs'),
+      exists('.eslintrc.json'),
+      exists('.prettierrc'),
+      exists('CHANGELOG.md'),
+    ]);
+
+    const [ci, codeql, dependabot, docker, compose, k8s1, k8s2, helm,
+      securityMd, codeOfConduct, contributing, issueTemplate, prTemplate,
+      pkgJson, pnpmWs, yarnLock, tsconfig, jestJs, jestTs, testsFolder, testsFolder2,
+      eslint1, eslint2, eslint3, prettier, changelog] = files;
+
+    // Scalability signals
+    const scalabilitySignals = {
+      ci,
+      docker: docker || compose,
+      kubernetes: k8s1 || k8s2 || helm,
+    };
+    const scalabilityScore = [scalabilitySignals.ci, scalabilitySignals.docker, scalabilitySignals.kubernetes].filter(Boolean).length;
+
+    // Security signals
+    const securitySignals = {
+      codeql,
+      dependabot,
+      securityPolicy: securityMd,
+      codeOfConduct,
+      license: Boolean(repo.license?.name),
+    };
+    const securityScore = [securitySignals.codeql, securitySignals.dependabot, securitySignals.securityPolicy, securitySignals.codeOfConduct, securitySignals.license].filter(Boolean).length;
+
+    // Structure signals
+    const tests = jestJs || jestTs || testsFolder || testsFolder2;
+    const lint = eslint1 || eslint2 || eslint3;
+    const typescript = tsconfig;
+    const monorepo = pnpmWs || (pkgJson && await this.hasWorkspaces(owner, name));
+    const structureSignals = { tests, lint, typescript, monorepo };
+    const structureScore = [tests, lint, typescript, monorepo].filter(Boolean).length;
+
+    // Management signals
+    const managementSignals = {
+      contributing,
+      issueTemplates: issueTemplate,
+      prTemplate,
+      changelog,
+      issuesEnabled: repo.has_issues !== false,
+    };
+    const managementScore = [managementSignals.contributing, managementSignals.issueTemplates, managementSignals.prTemplate, managementSignals.changelog, managementSignals.issuesEnabled].filter(Boolean).length;
+
+    const totalScore = scalabilityScore + securityScore + structureScore + managementScore;
+
+    return {
+      scalability: { signals: scalabilitySignals, score: scalabilityScore },
+      security: { signals: securitySignals, score: securityScore },
+      structure: { signals: structureSignals, score: structureScore },
+      management: { signals: managementSignals, score: managementScore },
+      totalScore,
+    };
+  }
+
+  async hasWorkspaces(owner, name) {
+    try {
+      const res = await this.api.get(`/repos/${owner}/${name}/contents/package.json`);
+      const content = atob(res.data.content || '');
+      const json = JSON.parse(content);
+      return Boolean(json.workspaces);
+    } catch {
+      return false;
     }
   }
 

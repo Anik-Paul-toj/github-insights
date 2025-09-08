@@ -70,15 +70,15 @@ const LanguageChart = ({ languages }) => {
     <div className="language-chart">
       <h3>Language Composition</h3>
       <div className="chart-container">
-        <ResponsiveContainer width="100%" height={400}>
-          <PieChart>
+        <ResponsiveContainer width="100%" height={360}>
+          <PieChart margin={{ top: 20, right: 32, bottom: 56, left: 32 }}>
             <Pie
               data={chartData}
               cx="50%"
               cy="50%"
               labelLine={false}
               label={renderCustomLabel}
-              outerRadius={120}
+              outerRadius={110}
               fill="#8884d8"
               dataKey="value"
             >
@@ -87,9 +87,12 @@ const LanguageChart = ({ languages }) => {
               ))}
             </Pie>
             <Tooltip content={<CustomTooltip />} />
-            <Legend 
-              verticalAlign="bottom" 
-              height={36}
+            <Legend
+              verticalAlign="bottom"
+              align="center"
+              layout="horizontal"
+              iconType="circle"
+              wrapperStyle={{ paddingTop: 8 }}
               formatter={(value, entry) => `${value} (${entry.payload.percentage}%)`}
             />
           </PieChart>

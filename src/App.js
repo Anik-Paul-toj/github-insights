@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LandingPage from './components/LandingPage';
 import SearchForm from './components/SearchForm';
 import RepositoryList from './components/RepositoryList';
@@ -25,6 +25,20 @@ function App() {
   const [error, setError] = useState(null);
   const [aiError, setAiError] = useState(null);
   const [contributorsData, setContributorsData] = useState(null);
+
+  // Restore last page stage on refresh so we don't jump back to landing
+  useEffect(() => {
+    const stage = localStorage.getItem('appStage');
+    if (stage === 'dashboard' || stage === 'repositories' || stage === 'insights') {
+      setShowDashboard(true);
+      // We intentionally do not auto-restore repositories/insights data on refresh
+      // to avoid stale API data; user will see the dashboard search view instead.
+    }
+  }, []);
+
+  const setStage = (stage) => {
+    localStorage.setItem('appStage', stage);
+  };
 
   const generateAIInsights = async (repoInfo, languagesData, contributorsData) => {
     setAiLoading(true);
@@ -85,6 +99,7 @@ function App() {
 
   const handleGetStarted = () => {
     setShowDashboard(true);
+    setStage('dashboard');
   };
 
   const handleSearchUser = async (username) => {
@@ -96,6 +111,7 @@ function App() {
       const repos = await githubService.getUserRepositories(username);
       setRepositories(repos);
       setShowRepositories(true);
+      setStage('repositories');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -123,6 +139,7 @@ function App() {
     setAiInsights(null);
     setShowRepositories(false);
     setShowInsights(true);
+    setStage('insights');
 
     try {
       // Fetch basic repository data
@@ -172,6 +189,7 @@ function App() {
   const handleBackToRepositories = () => {
     setShowInsights(false);
     setShowRepositories(true);
+    setStage('repositories');
     setRepoData(null);
     setLanguages(null);
     setCommitActivity(null);
@@ -183,6 +201,7 @@ function App() {
   const handleBackToSearch = () => {
     setShowRepositories(false);
     setShowInsights(false);
+    setStage('dashboard');
     setRepositories([]);
     setError(null);
   };
@@ -191,6 +210,7 @@ function App() {
     setShowDashboard(false);
     setShowRepositories(false);
     setShowInsights(false);
+    setStage('landing');
     setRepositories([]);
     setError(null);
     setAiError(null);

@@ -23,6 +23,7 @@
 
 .chart-container {
   margin-bottom: 1rem;
+  padding: 0 8px;
 }
 
 .custom-tooltip {
@@ -84,7 +85,8 @@
 
 @media (max-width: 768px) {
   .chart-container {
-    height: 300px;
+    height: 280px;
+    padding: 0;
   }
   
   .language-stats {

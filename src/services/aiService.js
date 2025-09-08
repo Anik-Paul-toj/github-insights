@@ -132,6 +132,40 @@ class AIService {
       throw new Error(`Failed to generate contribution analysis: ${error.message}`);
     }
   }
+
+  async generateComparisonSuggestions(yourRepo, comparedRepo, comparisonData) {
+    if (!yourRepo || !comparedRepo) return [];
+
+    const prompt = `Compare these two GitHub repositories and provide 3-4 specific improvement suggestions for the first repository based on the second repository's strengths:
+
+Your Repository: ${yourRepo.name}
+- Description: ${yourRepo.description || 'No description'}
+- Language: ${yourRepo.language}
+- Stars: ${yourRepo.stargazers_count}
+- Forks: ${yourRepo.forks_count}
+
+Compared Repository: ${comparedRepo.name}  
+- Description: ${comparedRepo.description || 'No description'}
+- Language: ${comparedRepo.language}
+- Stars: ${comparedRepo.stars}
+- Forks: ${comparedRepo.forks}
+
+${comparisonData ? 'Comparison insights: ' + JSON.stringify(comparisonData).substring(0, 500) : ''}
+
+Provide specific, actionable suggestions focusing on what makes the compared repository more successful. Format as bullet points. Keep each suggestion to 1-2 sentences.`;
+
+    try {
+      const response = await this.generateWithRetry(prompt);
+      return response.split('\n')
+        .filter(line => line.trim())
+        .map(line => line.replace(/^[-•*]\s*/, '').trim())
+        .filter(line => line.length > 10)
+        .slice(0, 4);
+    } catch (error) {
+      console.warn('Failed to generate comparison suggestions:', error.message);
+      return [];
+    }
+  }
 }
 
 export default new AIService();

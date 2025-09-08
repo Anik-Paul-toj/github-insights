@@ -82,6 +82,47 @@ class GitHubService {
     }
   }
 
+  async getOrgRepositories(org, page = 1, per_page = 30) {
+    try {
+      const response = await this.api.get(`/orgs/${org}/repos`, {
+        params: {
+          sort: 'updated',
+          page,
+          per_page
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw new Error(`Failed to fetch org repositories: ${error.message}`);
+    }
+  }
+
+  async getAnyOwnerRepositories(owner, page = 1, per_page = 30) {
+    try {
+      return await this.getUserRepositories(owner, page, per_page);
+    } catch (e) {
+      // If user not found, try as org
+      try {
+        return await this.getOrgRepositories(owner, page, per_page);
+      } catch (e2) {
+        // Final fallback: search API with user/org qualifier
+        try {
+          const res = await this.api.get('/search/repositories', {
+            params: {
+              q: `user:${owner}`,
+              sort: 'stars',
+              order: 'desc',
+              per_page
+            }
+          });
+          return res.data?.items || [];
+        } catch (e3) {
+          throw e2;
+        }
+      }
+    }
+  }
+
   async getAllUserRepositories(username, maxPages = 5) {
     const per_page = 100;
     let page = 1;

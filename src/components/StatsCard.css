@@ -72,7 +72,7 @@
 
 .stat-label {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .repo-meta {
@@ -85,11 +85,11 @@
 
 .meta-item {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .meta-item strong {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 @media (max-width: 768px) {
