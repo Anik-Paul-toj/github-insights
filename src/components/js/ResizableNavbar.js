@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X, Github } from 'lucide-react';
-import './ResizableNavbar.css';
+import '../css/ResizableNavbar.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const ResizableNavbar = ({ onGetStarted }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

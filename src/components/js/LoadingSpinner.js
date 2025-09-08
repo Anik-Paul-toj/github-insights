@@ -1,6 +1,6 @@
 import React from 'react';
 import { Loader } from 'lucide-react';
-import './LoadingSpinner.css';
+import '../css/LoadingSpinner.css';
 
 const LoadingSpinner = ({ message = 'Loading...', fullScreen = false }) => {
   const className = fullScreen ? 'loading-spinner fullscreen' : 'loading-spinner';

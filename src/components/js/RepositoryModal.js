@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Star, GitFork, Eye, ExternalLink } from 'lucide-react';
-import './RepositoryModal.css';
+import '../css/RepositoryModal.css';
 
 const RepositoryModal = ({ repository, isOpen, onClose, onViewInsights }) => {
   if (!isOpen || !repository) return null;

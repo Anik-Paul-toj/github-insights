@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Github, Brain, Zap, TrendingUp, Code, BarChart3 } from 'lucide-react';
 import ResizableNavbar from './ResizableNavbar';
-import './LandingPage.css';
-import githubService from '../services/githubService';
-import { useAuth } from '../context/AuthContext';
+import '../css/LandingPage.css';
+import githubService from '../../services/githubService';
+import { useAuth } from '../../context/AuthContext';
 import CommitActivitySection from './CommitActivitySection';
 
 const LandingPage = ({ onGetStarted }) => {

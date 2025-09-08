@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import LandingPage from './components/LandingPage';
-import SearchForm from './components/SearchForm';
-import RepositoryList from './components/RepositoryList';
-import RepositoryModal from './components/RepositoryModal';
-import Dashboard from './components/Dashboard';
-import LoadingSpinner from './components/LoadingSpinner';
+import LandingPage from './components/js/LandingPage';
+import SearchForm from './components/js/SearchForm';
+import RepositoryList from './components/js/RepositoryList';
+import RepositoryModal from './components/js/RepositoryModal';
+import Dashboard from './components/js/Dashboard';
+import LoadingSpinner from './components/js/LoadingSpinner';
 import githubService from './services/githubService';
 import aiService from './services/aiService';
 import './App.css';

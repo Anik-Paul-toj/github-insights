@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { GitCompare, Star, GitFork, Eye, Calendar, Code, Shield, RefreshCw, ExternalLink, TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import comparisonService from '../services/comparisonService';
-import githubService from '../services/githubService';
-import aiService from '../services/aiService';
-import './RepositoryComparison.css';
+import comparisonService from '../../services/comparisonService';
+import githubService from '../../services/githubService';
+import aiService from '../../services/aiService';
+import '../css/RepositoryComparison.css';
 
 const RepositoryComparison = ({ repoData, onError }) => {
   const [comparison, setComparison] = useState(null);
@@ -15,7 +15,7 @@ const RepositoryComparison = ({ repoData, onError }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [aiSuggestionsLoading, setAiSuggestionsLoading] = useState(false);
-  const [enableRandomComparison, setEnableRandomComparison] = useState(true);
+  const [enableRandomComparison, setEnableRandomComparison] = useState(false);
 
   const fetchComparison = async () => {
     if (!repoData || !enableRandomComparison) return;

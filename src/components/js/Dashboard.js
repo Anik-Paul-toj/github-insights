@@ -5,7 +5,7 @@ import CommitChart from './CommitChart';
 import AIInsights from './AIInsights';
 import RepositoryComparison from './RepositoryComparison';
 import { BarChart3, Brain, GitCompare } from 'lucide-react';
-import './Dashboard.css';
+import '../css/Dashboard.css';
 
 const Dashboard = ({ 
   repoData, 

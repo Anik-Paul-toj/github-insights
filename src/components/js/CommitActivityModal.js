@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { X, Maximize2, Minimize2 } from 'lucide-react';
-import './RepositoryModal.css';
-import githubService from '../services/githubService';
+import '../css/RepositoryModal.css';
+import githubService from '../../services/githubService';
 
 const boxColors = [
   'rgba(34,197,94,0.08)',

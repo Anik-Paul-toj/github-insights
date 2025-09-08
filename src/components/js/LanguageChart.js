@@ -1,6 +1,6 @@
 import React from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
-import './LanguageChart.css';
+import '../css/LanguageChart.css';
 
 const LanguageChart = ({ languages }) => {
   if (!languages || Object.keys(languages).length === 0) {

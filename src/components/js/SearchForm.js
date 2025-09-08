@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
-import './SearchForm.css';
+import '../css/SearchForm.css';
 
 const SearchForm = ({ onSearchUser, loading }) => {
   const [owner, setOwner] = useState('');

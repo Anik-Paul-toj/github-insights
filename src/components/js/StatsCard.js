@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, GitFork, AlertCircle, Scale, ExternalLink } from 'lucide-react';
-import './StatsCard.css';
+import '../css/StatsCard.css';
 
 const StatsCard = ({ repoData }) => {
   if (!repoData) return null;

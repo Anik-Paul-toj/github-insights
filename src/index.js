@@ -6,8 +6,8 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import Login from './components/Login';
-import Signup from './components/Signup';
+import Login from './components/js/Login';
+import Signup from './components/js/Signup';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();

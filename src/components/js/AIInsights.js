@@ -1,6 +1,6 @@
 import React from 'react';
 import { Brain, Code, Users, AlertTriangle, RefreshCw } from 'lucide-react';
-import './AIInsights.css';
+import '../css/AIInsights.css';
 
 const AIInsights = ({ insights, loading, error, onRetry }) => {
   const isRateLimit = error && (

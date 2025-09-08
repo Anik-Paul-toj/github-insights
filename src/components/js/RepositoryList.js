@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Star, GitFork, Eye } from 'lucide-react';
-import './RepositoryList.css';
+import '../css/RepositoryList.css';
 
 const RepositoryList = ({ repositories, loading, onRepositorySelect }) => {
   const [page, setPage] = useState(1);

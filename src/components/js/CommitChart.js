@@ -1,6 +1,6 @@
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import './CommitChart.css';
+import '../css/CommitChart.css';
 
 const CommitChart = ({ commitActivity }) => {
   if (!commitActivity || !Array.isArray(commitActivity) || commitActivity.length === 0) {
