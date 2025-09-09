@@ -1,26 +1,78 @@
 .search-form {
   text-align: center;
-  padding: 2rem;
+  padding: 1rem;
   max-width: 600px;
   margin: 0 auto;
+  width: 100%;
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .search-form h1 {
   color: #ffffff;
   margin-bottom: 0.5rem;
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 700;
   text-shadow: 0 0 20px rgba(255, 120, 37, 0.3);
 }
 
 .search-form p {
   color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 2rem;
-  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 767px) {
+  .search-form {
+    padding: 0.75rem;
+    min-height: auto;
+    height: auto;
+  }
+  
+  .search-form h1 {
+    font-size: 1.25rem;
+  }
+  
+  .search-form p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .search-form {
+    padding: 1.5rem;
+  }
+  
+  .search-form h1 {
+    font-size: 2rem;
+  }
+  
+  .search-form p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .search-form {
+    padding: 2rem;
+  }
+  
+  .search-form h1 {
+    font-size: 2.5rem;
+  }
+  
+  .search-form p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
 }
 
 .demo-toggle {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   padding: 1rem;
   background: rgba(255, 120, 37, 0.1);
   border-radius: 12px;
@@ -33,6 +85,32 @@
   gap: 0.75rem;
   cursor: pointer;
   margin-bottom: 0.5rem;
+  justify-content: center;
+}
+
+/* Mobile responsive toggle */
+@media (max-width: 767px) {
+  .demo-toggle {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+  }
+  
+  .toggle-container {
+    gap: 0.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .demo-toggle {
+    margin-bottom: 2rem;
+  }
+  
+  .toggle-container {
+    flex-direction: row;
+    justify-content: center;
+  }
 }
 
 .toggle-container input[type="checkbox"] {
@@ -86,6 +164,9 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  position: relative;
+  margin-bottom: 1rem;
 }
 
 .input-group {
@@ -97,6 +178,7 @@
   padding: 0.75rem;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .input-group:focus-within {
@@ -112,10 +194,21 @@
   flex: 1;
   background: transparent;
   color: #ffffff;
+  width: 100%;
+  min-height: 24px; /* Touch-friendly */
 }
 
 .input-group input::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile-specific container adjustments */
+@media (max-width: 767px) {
+  .search-container {
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
 }
 
 .separator {
@@ -141,6 +234,71 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(255, 120, 37, 0.3);
+  width: 100%;
+  min-height: 48px; /* Touch-friendly minimum */
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+/* Mobile responsive search styles */
+@media (max-width: 767px) {
+  .search-container {
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+  
+  .input-group {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-group input {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 0.75rem 0.5rem;
+    min-height: 20px;
+  }
+  
+  .search-button {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    min-height: 52px;
+    margin-top: 0.75rem;
+    border-radius: 14px;
+    font-weight: 600;
+    width: 100%;
+    max-width: none;
+    /* Ensure button is always visible */
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    transform: none;
+    margin-bottom: 1rem;
+    z-index: 50;
+  }
+  
+  /* Add safe area for mobile devices */
+  .search-form {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 768px) {
+  .search-button {
+    width: auto;
+    align-self: center;
+    min-width: 200px;
+    margin-top: 0.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .search-button {
+    margin-top: 1rem;
+  }
 }
 
 .search-button:hover:not(:disabled) {
@@ -154,19 +312,4 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
-}
-
-@media (max-width: 768px) {
-  .search-form h1 {
-    font-size: 2rem;
-  }
-  
-  .input-group {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .separator {
-    transform: rotate(90deg);
-  }
 }

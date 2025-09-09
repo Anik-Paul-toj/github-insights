@@ -87,7 +87,15 @@ const RepositoryComparison = ({ repoData, onError }) => {
     if (urlMatch) {
       username = urlMatch[1];
       if (urlMatch[2]) presetFullName = `${urlMatch[1]}/${urlMatch[2]}`;
+    } else if (raw.includes('/') && raw.split('/').length === 2) {
+      // Handle direct repo input like "username/reponame"
+      const [user, repo] = raw.split('/');
+      if (user && repo) {
+        username = user;
+        presetFullName = raw;
+      }
     }
+    
     if (!username) return;
     setUserLoading(true);
     setError(null);
@@ -98,8 +106,12 @@ const RepositoryComparison = ({ repoData, onError }) => {
       setUserRepos(sorted);
       if (presetFullName && sorted.some(r => r.full_name === presetFullName)) {
         setUserRepoSel(presetFullName);
+        setUserInput(presetFullName); // Ensure input shows the selected repo
       } else {
         setUserRepoSel(sorted[0]?.full_name || '');
+        if (sorted[0]?.full_name) {
+          setUserInput(sorted[0].full_name); // Update input to show the first repo
+        }
       }
     } catch (e) {
       setError(e?.message || 'Failed to load user repositories');
@@ -268,14 +280,28 @@ const RepositoryComparison = ({ repoData, onError }) => {
           <div className="comparison-disabled-message">
             <h4>Manual Repository Comparison</h4>
             <p>Auto-comparison is disabled. Use the form below to manually compare with any repository.</p>
+            <p className="helper-text">💡 Tip: Type a username (e.g., "facebook") or full repository name (e.g., "facebook/react")</p>
           </div>
           <div className="row">
             <input
               type="text"
-              placeholder="GitHub username to compare"
+              placeholder="Enter GitHub username or repository URL"
               value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value;
+                setUserInput(value);
+                
+                // Auto-detect if user typed a full repo name and load repos
+                if (value.includes('/') && value.split('/').length === 2) {
+                  const [username, repoName] = value.split('/');
+                  if (username && repoName && !userLoading && userRepos.length === 0) {
+                    // Auto-load repos if user typed a full repo path
+                    handleLoadUserRepos();
+                  }
+                }
+              }}
               className="user-input"
+              data-selected={userRepoSel && userInput === userRepoSel ? "true" : "false"}
             />
             <button onClick={handleLoadUserRepos} className="load-button" disabled={userLoading}>
               {userLoading ? 'Loading…' : 'Load Repos'}
@@ -283,12 +309,31 @@ const RepositoryComparison = ({ repoData, onError }) => {
           </div>
           {userRepos.length > 0 && (
             <div className="row">
-              <select value={userRepoSel} onChange={(e) => setUserRepoSel(e.target.value)} className="repo-select">
+              <select 
+                value={userRepoSel} 
+                onChange={(e) => {
+                  const selectedRepo = e.target.value;
+                  setUserRepoSel(selectedRepo);
+                  // Update the input field to show the selected repository name
+                  if (selectedRepo) {
+                    setUserInput(selectedRepo);
+                  }
+                }} 
+                className="repo-select"
+                data-selected={userRepoSel ? "true" : "false"}
+              >
+                <option value="">Select a repository...</option>
                 {userRepos.slice(0, 20).map(r => (
                   <option key={r.full_name} value={r.full_name}>{r.full_name} ★{r.stargazers_count}</option>
                 ))}
               </select>
-              <button onClick={handleCompareWithSelected} className="compare-button">Compare Selected</button>
+              <button 
+                onClick={handleCompareWithSelected} 
+                className="compare-button"
+                disabled={!userRepoSel || loading}
+              >
+                {loading ? 'Comparing...' : 'Compare Selected'}
+              </button>
             </div>
           )}
         </div>

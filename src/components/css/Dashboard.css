@@ -1,26 +1,77 @@
 .dashboard {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 1rem;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0f0f0f 50%, #1a1a1a 75%, #0a0a0a 100%);
   min-height: 100vh;
 }
 
 .dashboard-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
   border-bottom: 2px solid rgba(255, 120, 37, 0.3);
 }
 
 .dashboard-header h2 {
   margin: 0;
-  font-size: 32px;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;
   text-shadow: 0 0 20px rgba(255, 120, 37, 0.3);
+  text-align: center;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 767px) {
+  .dashboard {
+    padding: 0.75rem;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .dashboard-header h2 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .dashboard {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .dashboard-header h2 {
+    font-size: 2rem;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard {
+    padding: 20px;
+  }
+  
+  .dashboard-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+  }
+  
+  .dashboard-header h2 {
+    font-size: 32px;
+  }
 }
 
 .tab-switcher {
@@ -30,6 +81,9 @@
   border-radius: 16px;
   padding: 6px;
   backdrop-filter: blur(10px);
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
 }
 
 .tab-button {
@@ -38,13 +92,54 @@
   gap: 8px;
   background: none;
   border: none;
-  padding: 12px 20px;
+  padding: 12px 16px;
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
+  white-space: nowrap;
+  min-height: 44px; /* Touch-friendly */
+  flex: 1;
+  justify-content: center;
+}
+
+/* Mobile responsive tab styles */
+@media (max-width: 767px) {
+  .tab-switcher {
+    padding: 4px;
+    border-radius: 12px;
+  }
+  
+  .tab-button {
+    padding: 10px 12px;
+    font-size: 12px;
+    gap: 4px;
+  }
+  
+  .tab-button span {
+    display: none; /* Hide text on very small screens, keep icons */
+  }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+  .tab-button span {
+    display: inline; /* Show text on larger mobile screens */
+  }
+}
+
+@media (min-width: 768px) {
+  .tab-switcher {
+    width: auto;
+    max-width: none;
+  }
+  
+  .tab-button {
+    padding: 12px 20px;
+    font-size: 14px;
+    flex: none;
+  }
 }
 
 .tab-button:hover {
@@ -89,54 +184,46 @@
 
 .charts-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .chart-item {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 120, 37, 0.2);
   border-radius: 16px;
-  padding: 1.5rem;
+  padding: 1rem;
   backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
+}
+
+/* Responsive charts */
+@media (min-width: 768px) {
+  .charts-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .chart-item {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .charts-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .chart-item {
+    padding: 2rem;
+  }
 }
 
 .chart-item:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(255, 120, 37, 0.2);
   border-color: rgba(255, 120, 37, 0.4);
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .dashboard {
-    padding: 16px;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    gap: 16px;
-    align-items: stretch;
-  }
-
-  .dashboard-header h2 {
-    font-size: 24px;
-    text-align: center;
-  }
-
-  .tab-switcher {
-    justify-content: center;
-  }
-
-  .tab-button {
-    flex: 1;
-    justify-content: center;
-  }
-
-  .charts-container {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
 }

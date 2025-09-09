@@ -13,17 +13,67 @@ body {
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #0f0f0f 50%, #1a1a1a 75%, #0a0a0a 100%);
   color: #ffffff;
   min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Mobile viewport fixes */
+@media (max-width: 767px) {
+  body {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    position: relative;
+  }
+  
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
 }
 
 .App {
   min-height: 100vh;
-  padding: 2rem 0;
+  padding: 1rem 0;
+  position: relative;
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+  width: 100%;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 767px) {
+  .App {
+    padding: 0.5rem 0;
+  }
+  
+  .container {
+    padding: 0 0.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .App {
+    padding: 1.5rem 0;
+  }
+  
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .App {
+    padding: 2rem 0;
+  }
+  
+  .container {
+    padding: 0 2rem;
+  }
 }
 
 .error-message {
@@ -41,12 +91,28 @@ body {
   font-weight: 500;
 }
 
-/* Dashboard Layout */
+/* Dashboard Layout - Mobile First */
 .charts-container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 2rem;
-  margin: 2rem 0;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+@media (min-width: 768px) {
+  .charts-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .charts-container {
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
 }
 
 .chart-item {

@@ -81,23 +81,70 @@
 }
 
 .hero-section {
-  padding: 2rem 1rem;
+  padding: 1rem;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 1;
-  padding-top: 2rem; /* Reduced padding since navbar is floating */
+  padding-top: 1rem;
+  padding-bottom: 2rem; /* Add bottom padding for mobile */
 }
 
 .hero-content {
   max-width: 1200px;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr;
+  gap: 2rem;
   align-items: center;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 767px) {
+  .hero-section {
+    padding: 0.5rem;
+    padding-top: 1rem;
+    padding-bottom: 3rem; /* Extra bottom padding on mobile */
+    min-height: calc(100vh - 2rem);
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 3rem; /* Account for mobile navbar */
+  }
+  
+  .hero-content {
+    gap: 1.5rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    padding: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+    align-items: center;
+  }
+  
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-section {
+    padding: 2rem 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .hero-content {
+    gap: 4rem;
+  }
 }
 
 .hero-text {
@@ -105,34 +152,118 @@
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   line-height: 1.1;
+  flex-direction: column;
+  text-align: center;
 }
 
 .hero-icon {
-  width: 4rem;
-  height: 4rem;
+  width: 3rem;
+  height: 3rem;
   color: #ff7825;
   filter: drop-shadow(0 0 20px rgba(255, 120, 37, 0.5));
 }
 
 .hero-subtitle {
-  font-size: 1.3rem;
+  font-size: 1rem;
   line-height: 1.6;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   opacity: 0.9;
+  text-align: center;
 }
 
 .hero-features {
   display: flex;
-  gap: 2rem;
-  margin-bottom: 3rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 767px) {
+  .hero-title {
+    font-size: 1.75rem;
+    gap: 0.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .hero-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-features {
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .feature {
+    justify-content: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-text {
+    text-align: left;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+    flex-direction: row;
+    text-align: left;
+  }
+  
+  .hero-icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+    text-align: left;
+  }
+  
+  .hero-features {
+    justify-content: flex-start;
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-title {
+    font-size: 3.5rem;
+    gap: 1rem;
+  }
+  
+  .hero-icon {
+    width: 4rem;
+    height: 4rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .hero-features {
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
 }
 
 .feature {
@@ -151,17 +282,32 @@
 .cta-button {
   background: #ff7825;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 50px;
   color: #000000;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(255, 120, 37, 0.3);
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  min-height: 44px; /* Touch-friendly minimum */
+}
+
+/* Responsive CTA button */
+@media (min-width: 768px) {
+  .cta-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    width: auto;
+    margin: 0;
+  }
 }
 
 .cta-button:hover {

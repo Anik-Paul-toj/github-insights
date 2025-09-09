@@ -8,6 +8,7 @@ import LoadingSpinner from './components/js/LoadingSpinner';
 import githubService from './services/githubService';
 import aiService from './services/aiService';
 import './App.css';
+import './responsive.css';
 
 function App() {
   const [showDashboard, setShowDashboard] = useState(false);
